@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Bootleg Google Paint</title>
+    <style media="screen">
+      body {
+        display: block;
+      }
+    </style>
+  </head>
+
+  <body>
+    <h1>Bootleg Google Paint</h1>
+    <div class="">
+      <canvas id="canvas" width="600px" height="600px"></canvas>
+    </div>
+
+    <button type="button" id='eraser' name="button">Eraser</button>
+    <button type="button" id='clear' name="button">Clear</button>
+
+
+    <script type="text/javascript">
+
+      let painting = document.getElementById('canvas');
+      painting.width = window.innerWidth;
+      painting.height = window.innerHeight - 120;
+
+      let context = painting.getContext('2d');
+      context.lineWidth = 2;
+
+      let erase_button = document.getElementById('eraser');
+      let clear_button = document.getElementById('clear');
+
+      let color = true;
+
+      erase_button.onclick = function () {
+        color = !color;
+        if(color) {
+          context.strokeStyle = 'black';
+          context.lineWidth = 2;
+        }
+        else {
+          context.strokeStyle = 'white';
+          context.lineWidth = 15;
+        }
+      }
+
+      clear_button.onclick = function () {
+        context.clearRect(0, 0, painting.width, painting.height);
+      }
+
+      let paint_on = false;
+
+      let prev_x = 0;
+      let prev_y = 0;
+
+      window.addEventListener('mousedown', e => {
+
+        paint_on = true;
+
+        prev_x = e.clientX - painting.offsetLeft;
+        prev_y = e.clientY - painting.offsetTop;
+
+      } );
+
+
+      window.addEventListener('mousemove', e => {
+
+        if(!paint_on) { return; }
+
+        next_x = e.clientX - painting.offsetLeft;
+        next_y = e.clientY - painting.offsetTop;
+
+        context.beginPath();
+        context.moveTo(prev_x, prev_y);
+        context.lineTo(next_x, next_y);
+        context.closePath();
+        context.stroke();
+
+        prev_x = next_x;
+        prev_y = next_y;
+
+      } );
+
+
+
+      window.addEventListener('mouseup', e => {
+        paint_on = false;
+      } );
+
+    </script>
+
+  </body>
+</html>
